@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>6.2</version>
+    <date>2022-09-29T12:54:10Z</date>
+    <template_groups>
+        <template_group>
+            <uuid>7df96b18c230490a9a0a9e2307226338</uuid>
+            <name>Templates</name>
+        </template_group>
+    </template_groups>
+    <templates>
+        <template>
+            <uuid>61635b6481e146b081d34e1adeae3d87</uuid>
+            <template>TZ 670</template>
+            <name>TZ 670</name>
+            <description>Created by Wesley dos Reis Rodrigues</description>
+            <groups>
+                <group>
+                    <name>Templates</name>
+                </group>
+            </groups>
+            <items>
+                <item>
+                    <uuid>dc0239be0171417d87105ab75775148f</uuid>
+                    <name>ICMP ping</name>
+                    <type>SIMPLE</type>
+                    <key>icmpping</key>
+                    <delay>60</delay>
+                    <history>7d</history>
+                    <trends>7d</trends>
+                    <valuemap>
+                        <name>Service state</name>
+                    </valuemap>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>ICMP Ping</value>
+                        </tag>
+                    </tags>
+                    <triggers>
+                        <trigger>
+                            <uuid>572a25bc14524476853e2dee0d171baf</uuid>
+                            <expression>max(/TZ 670/icmpping,#5)=0</expression>
+                            <name>{HOST.NAME} unavailable</name>
+                            <priority>HIGH</priority>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <uuid>36ee7a7b2e9346db86486853114b78b9</uuid>
+                    <name>ICMP loss</name>
+                    <type>SIMPLE</type>
+                    <key>icmppingloss</key>
+                    <delay>60</delay>
+                    <history>7d</history>
+                    <trends>7d</trends>
+                    <value_type>FLOAT</value_type>
+                    <units>%</units>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>ICMP Ping</value>
+                        </tag>
+                    </tags>
+                    <triggers>
+                        <trigger>
+                            <uuid>0c9cba0241e0423a90dc17524dfd9cd0</uuid>
+                            <expression>min(/TZ 670/icmppingloss,5m)&gt;30</expression>
+                            <name>Very high packet loss on {HOST.NAME}</name>
+                            <priority>WARNING</priority>
+                            <dependencies>
+                                <dependency>
+                                    <name>{HOST.NAME} unavailable</name>
+                                    <expression>max(/TZ 670/icmpping,#5)=0</expression>
+                                </dependency>
+                            </dependencies>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <uuid>53e75c216201466aa44d0b6f129b866f</uuid>
+                    <name>ICMP response time</name>
+                    <type>SIMPLE</type>
+                    <key>icmppingsec</key>
+                    <delay>60</delay>
+                    <history>7d</history>
+                    <trends>7d</trends>
+                    <value_type>FLOAT</value_type>
+                    <units>s</units>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>ICMP Ping</value>
+                        </tag>
+                    </tags>
+                    <triggers>
+                        <trigger>
+                            <uuid>b6d3e2bb9bd849cea8cedfa2c81439ff</uuid>
+                            <expression>avg(/TZ 670/icmppingsec,5m)&gt;0.30</expression>
+                            <name>Tempo de resposta muito alta em {HOST.NAME}</name>
+                            <priority>WARNING</priority>
+                            <dependencies>
+                                <dependency>
+                                    <name>{HOST.NAME} unavailable</name>
+                                    <expression>max(/TZ 670/icmpping,#5)=0</expression>
+                                </dependency>
+                            </dependencies>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <uuid>a9fab4f151f04d89a9d8abd450499c28</uuid>
+                    <name>Current system ROM version</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>.1.3.6.1.4.1.8741.2.1.1.4.0</snmp_oid>
+                    <key>snwlSysROMVersion</key>
+                    <delay>3600</delay>
+                    <history>360d</history>
+                    <trends>0</trends>
+                    <value_type>TEXT</value_type>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>Information</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>946bef01ee8343ecbcec9d1810a0d329</uuid>
+                    <name>Simultaneous connections</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>.1.3.6.1.4.1.8741.1.3.1.2.0</snmp_oid>
+                    <key>sonicCurrentConnCacheEntries.0</key>
+                    <delay>60</delay>
+                    <history>30d</history>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>Performance</value>
+                        </tag>
+                    </tags>
+                    <triggers>
+                        <trigger>
+                            <uuid>3f5144a8694d4ddfb0bf6fc207410b73</uuid>
+                            <expression>min(/TZ 670/sonicCurrentConnCacheEntries.0,300s)&gt;{$CURRENT.CACHE.ENTRIES}</expression>
+                            <recovery_mode>NONE</recovery_mode>
+                            <name>Number of active connection cache entries through Firewall exceeded {ITEM.LASTVALUE}</name>
+                            <priority>WARNING</priority>
+                            <manual_close>YES</manual_close>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <uuid>f1f57cfb4bd9490da5769d0f1a15e002</uuid>
+                    <name>CPU Load</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>.1.3.6.1.4.1.8741.1.3.1.3.0</snmp_oid>
+                    <key>sonicCurrentCPUUtil.0</key>
+                    <delay>60</delay>
+                    <history>30d</history>
+                    <units>%</units>
+                    <description>CPU utilizada</description>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>Performance</value>
+                        </tag>
+                    </tags>
+                    <triggers>
+                        <trigger>
+                            <uuid>e8f4d4e7de044ea5bd53135f16ada799</uuid>
+                            <expression>avg(/TZ 670/sonicCurrentCPUUtil.0,300s)&gt;90</expression>
+                            <name>More than 90% CPU consumption for 5 minutes</name>
+                            <priority>WARNING</priority>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <uuid>4df9a43711ce4d639841fd0dbab710ef</uuid>
+                    <name>Forwarding/Inspection CPU Utilization</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>.1.3.6.1.4.1.8741.1.3.1.7.0</snmp_oid>
+                    <key>sonicCurrentFwdAndInspectCPUUtil</key>
+                    <delay>60</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>%</units>
+                    <preprocessing>
+                        <step>
+                            <type>CHANGE_PER_SECOND</type>
+                            <parameters>
+                                <parameter/>
+                            </parameters>
+                        </step>
+                        <step>
+                            <type>MULTIPLIER</type>
+                            <parameters>
+                                <parameter>100</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>Performance</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>cc19019cc40643ae8669dcd1985095d1</uuid>
+                    <name>Management CPU Utilization</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>.1.3.6.1.4.1.8741.1.3.1.6.0</snmp_oid>
+                    <key>sonicCurrentManagementCPUUtil</key>
+                    <delay>60</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>%</units>
+                    <preprocessing>
+                        <step>
+                            <type>CHANGE_PER_SECOND</type>
+                            <parameters>
+                                <parameter/>
+                            </parameters>
+                        </step>
+                        <step>
+                            <type>MULTIPLIER</type>
+                            <parameters>
+                                <parameter>100</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>Performance</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>684f2c39e890415f9509d4ff453c18e9</uuid>
+                    <name>RAM</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>.1.3.6.1.4.1.8741.1.3.1.4.0</snmp_oid>
+                    <key>sonicCurrentRAMUtil.0</key>
+                    <delay>60</delay>
+                    <history>30d</history>
+                    <units>%</units>
+                    <description>Memória utilizada</description>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>Performance</value>
+                        </tag>
+                    </tags>
+                    <triggers>
+                        <trigger>
+                            <uuid>fa634377cacf4038b00125cdc96c5d66</uuid>
+                            <expression>min(/TZ 670/sonicCurrentRAMUtil.0,300s)&gt;90</expression>
+                            <name>More than 90% memory consumption for 5 minutes</name>
+                            <priority>WARNING</priority>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <uuid>816bc3dc90f34430beb2f93049736fa1</uuid>
+                    <name>Firmware version</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>.1.3.6.1.4.1.8741.2.1.1.3.0</snmp_oid>
+                    <key>sonicFirmwareVersion</key>
+                    <delay>3600</delay>
+                    <history>360d</history>
+                    <trends>0</trends>
+                    <value_type>TEXT</value_type>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>Information</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>e174a58d82b7490183e60557fef91288</uuid>
+                    <name>Model</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>.1.3.6.1.4.1.8741.2.1.1.1.0</snmp_oid>
+                    <key>sonicModel</key>
+                    <delay>86400</delay>
+                    <history>30d</history>
+                    <trends>0</trends>
+                    <value_type>TEXT</value_type>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>Information</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>800755ad779f48b2b791e1df7e8a90e0</uuid>
+                    <name>Current Connections</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>.1.3.6.1.4.1.8741.1.3.1.2.0</snmp_oid>
+                    <key>sonicwallCurrentConnections</key>
+                    <delay>60</delay>
+                    <units>KC</units>
+                    <preprocessing>
+                        <step>
+                            <type>CHANGE_PER_SECOND</type>
+                            <parameters>
+                                <parameter/>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>Performance</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>383a40ee413545888851254dc1531a67</uuid>
+                    <name>Current CPU Util</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>.1.3.6.1.4.1.8741.1.3.1.3.0</snmp_oid>
+                    <key>sonicwallCurrentCPUUtil</key>
+                    <delay>60</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>%</units>
+                    <preprocessing>
+                        <step>
+                            <type>CHANGE_PER_SECOND</type>
+                            <parameters>
+                                <parameter/>
+                            </parameters>
+                        </step>
+                        <step>
+                            <type>MULTIPLIER</type>
+                            <parameters>
+                                <parameter>100</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>Performance</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>cfc445b21cae4efea34aa49143feda50</uuid>
+                    <name>Current RAM Usage</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>.1.3.6.1.4.1.8741.1.3.1.4.0</snmp_oid>
+                    <key>sonicwallCurrentRAMUtil</key>
+                    <delay>60</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>%</units>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>Performance</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>45e7aed412bd4b5e95e7237cef9e5c4c</uuid>
+                    <name>Serial number</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>.1.3.6.1.4.1.8741.2.1.1.2.0</snmp_oid>
+                    <key>SysmSerialNumber</key>
+                    <delay>3600</delay>
+                    <trends>0</trends>
+                    <value_type>TEXT</value_type>
+                    <inventory_link>SERIALNO_A</inventory_link>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>Information</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>6452da6bd8704594b1064a62b6e5f279</uuid>
+                    <name>Uptime</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>1.3.6.1.2.1.1.3.0</snmp_oid>
+                    <key>sysUpTime.0</key>
+                    <delay>60</delay>
+                    <history>30d</history>
+                    <units>uptime</units>
+                    <preprocessing>
+                        <step>
+                            <type>MULTIPLIER</type>
+                            <parameters>
+                                <parameter>0.01</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>Information</value>
+                        </tag>
+                    </tags>
+                    <triggers>
+                        <trigger>
+                            <uuid>b4b0cf92c8724d79968d07c8e2974190</uuid>
+                            <expression>last(/TZ 670/sysUpTime.0)&lt;800</expression>
+                            <name>Firewall has just been restarted</name>
+                            <priority>AVERAGE</priority>
+                        </trigger>
+                    </triggers>
+                </item>
+            </items>
+            <discovery_rules>
+                <discovery_rule>
+                    <uuid>abdf83ca182040d7a74b7b19fd3aa7f7</uuid>
+                    <name>Interfaces </name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>discovery[{#SNMPVALUE},IF-MIB::ifDescr]</snmp_oid>
+                    <key>sonicwallifDescr</key>
+                    <delay>90</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <uuid>18e2c64fdd4a446b87d9f8eab2ba5c3a</uuid>
+                            <name>Incoming Traffic on interface {#SNMPVALUE}</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>IF-MIB::ifInOctets.{#SNMPINDEX}</snmp_oid>
+                            <key>ifInOctets.[{#SNMPVALUE}]</key>
+                            <delay>30s</delay>
+                            <units>bps</units>
+                            <preprocessing>
+                                <step>
+                                    <type>CHANGE_PER_SECOND</type>
+                                    <parameters>
+                                        <parameter/>
+                                    </parameters>
+                                </step>
+                                <step>
+                                    <type>MULTIPLIER</type>
+                                    <parameters>
+                                        <parameter>8</parameter>
+                                    </parameters>
+                                </step>
+                            </preprocessing>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Network</value>
+                                </tag>
+                            </tags>
+                        </item_prototype>
+                        <item_prototype>
+                            <uuid>ed4617ce18494eeca9c9e766528437b4</uuid>
+                            <name>Operational status {#SNMPVALUE}</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>.1.3.6.1.2.1.2.2.1.8.{#SNMPINDEX}</snmp_oid>
+                            <key>ifOperStatus.[{#SNMPVALUE}]</key>
+                            <delay>30s</delay>
+                            <valuemap>
+                                <name>TZ 670</name>
+                            </valuemap>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Network</value>
+                                </tag>
+                            </tags>
+                        </item_prototype>
+                        <item_prototype>
+                            <uuid>c2f91c3449844910a506b0cd5aeb4770</uuid>
+                            <name>Outgoing Traffic on interface {#SNMPVALUE}</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>IF-MIB::ifOutOctets.{#SNMPINDEX}</snmp_oid>
+                            <key>ifOutOctets.[{#SNMPVALUE}]</key>
+                            <delay>30s</delay>
+                            <units>bps</units>
+                            <valuemap>
+                                <name>TZ 670</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>CHANGE_PER_SECOND</type>
+                                    <parameters>
+                                        <parameter/>
+                                    </parameters>
+                                </step>
+                                <step>
+                                    <type>MULTIPLIER</type>
+                                    <parameters>
+                                        <parameter>8</parameter>
+                                    </parameters>
+                                </step>
+                            </preprocessing>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Network</value>
+                                </tag>
+                            </tags>
+                        </item_prototype>
+                    </item_prototypes>
+                    <graph_prototypes>
+                        <graph_prototype>
+                            <uuid>7bfdfbaedf994318a618e0d4f9359204</uuid>
+                            <name>Traffic on {#SNMPVALUE}</name>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <drawtype>GRADIENT_LINE</drawtype>
+                                    <color>00FF00</color>
+                                    <item>
+                                        <host>TZ 670</host>
+                                        <key>ifInOctets.[{#SNMPVALUE}]</key>
+                                    </item>
+                                </graph_item>
+                                <graph_item>
+                                    <sortorder>2</sortorder>
+                                    <drawtype>GRADIENT_LINE</drawtype>
+                                    <color>FF8000</color>
+                                    <item>
+                                        <host>TZ 670</host>
+                                        <key>ifOutOctets.[{#SNMPVALUE}]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                    </graph_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+            <macros>
+                <macro>
+                    <macro>{$CURRENT.CACHE.ENTRIES}</macro>
+                    <value>15000</value>
+                </macro>
+            </macros>
+            <valuemaps>
+                <valuemap>
+                    <uuid>6e2e8a6f57ef42c8ad31fb6068a306c7</uuid>
+                    <name>Service state</name>
+                    <mappings>
+                        <mapping>
+                            <value>0</value>
+                            <newvalue>Down</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>1</value>
+                            <newvalue>Up</newvalue>
+                        </mapping>
+                    </mappings>
+                </valuemap>
+                <valuemap>
+                    <uuid>231fdc0ed00c40abae9db52dbd250c0b</uuid>
+                    <name>TZ 670</name>
+                    <mappings>
+                        <mapping>
+                            <value>1</value>
+                            <newvalue>Up</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>2</value>
+                            <newvalue>Down</newvalue>
+                        </mapping>
+                    </mappings>
+                </valuemap>
+            </valuemaps>
+        </template>
+    </templates>
+    <graphs>
+        <graph>
+            <uuid>5cae2f197aa049ffb40613eb8f6df976</uuid>
+            <name>CPU %</name>
+            <show_work_period>NO</show_work_period>
+            <graph_items>
+                <graph_item>
+                    <drawtype>GRADIENT_LINE</drawtype>
+                    <color>00AA00</color>
+                    <item>
+                        <host>TZ 670</host>
+                        <key>sonicwallCurrentCPUUtil</key>
+                    </item>
+                </graph_item>
+            </graph_items>
+        </graph>
+        <graph>
+            <uuid>ff674f99b2374c0b95f10a5058e154f1</uuid>
+            <name>Current Connections</name>
+            <show_work_period>NO</show_work_period>
+            <graph_items>
+                <graph_item>
+                    <color>999900</color>
+                    <item>
+                        <host>TZ 670</host>
+                        <key>sonicwallCurrentConnections</key>
+                    </item>
+                </graph_item>
+            </graph_items>
+        </graph>
+        <graph>
+            <uuid>166ee9077699487e832a98041f1abc10</uuid>
+            <name>RAM %</name>
+            <show_work_period>NO</show_work_period>
+            <graph_items>
+                <graph_item>
+                    <drawtype>GRADIENT_LINE</drawtype>
+                    <color>C80000</color>
+                    <item>
+                        <host>TZ 670</host>
+                        <key>sonicwallCurrentRAMUtil</key>
+                    </item>
+                </graph_item>
+            </graph_items>
+        </graph>
+    </graphs>
+</zabbix_export>
